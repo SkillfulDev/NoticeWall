@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">NoticeWall</string>
+    <!-- Drawer menu -->
+    <string name="ad_cat1">Ads</string>
+    <string name="ad_my_ads">My Ads</string>
+    <string name="ad_car">Cars</string>
+    <string name="ad_pc">Computers</string>
+    <string name="ad_smartphone">Smartphones</string>
+    <string name="ad_dm">Home Appliances</string>
+    <string name="ad_cat2">Account</string>
+    <string name="ac_sign_up">Sign Up</string>
+    <string name="ac_sign_in">Sign In</string>
+    <string name="ac_sign_out">Sign Out</string>
+
+</resources>
