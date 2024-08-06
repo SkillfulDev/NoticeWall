@@ -5,14 +5,18 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import ua.chernonog.noticewall.databinding.ActivityMainBinding
+import ua.chernonog.noticewall.dialoghelper.DialogConst
+import ua.chernonog.noticewall.dialoghelper.DialogHelper
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    val mAuth = FirebaseAuth.getInstance()
+    private val dialogHelper = DialogHelper(this)
     private lateinit var rootElement: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         rootElement = ActivityMainBinding.inflate(layoutInflater)
@@ -57,11 +61,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.id_sign_up -> {
-                Toast.makeText(this, "Pressed sign up", Toast.LENGTH_SHORT).show()
+                dialogHelper.createSignDialog(DialogConst.SING_UP_STATE)
             }
 
             R.id.id_sign_in -> {
-                Toast.makeText(this, "Pressed sing in", Toast.LENGTH_SHORT).show()
+                dialogHelper.createSignDialog(DialogConst.SING_IN_STATE)
             }
 
             R.id.id_sign_out -> {
