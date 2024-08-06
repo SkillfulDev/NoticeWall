@@ -11,34 +11,32 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.accessibility.AccessibilityManagerCompat.TouchExplorationStateChangeListener
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import ua.chernonog.noticewall.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private lateinit var rootElement: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        rootElement = ActivityMainBinding.inflate(layoutInflater)
+        val view = rootElement.root
+        setContentView(view)
         init()
-
-
     }
 
     private fun init() {
-        val navView = findViewById<NavigationView>(R.id.navView)
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val toggle = ActionBarDrawerToggle(
             this,
-            drawerLayout,
-            toolbar,
+            rootElement.drawerLayout,
+            rootElement.mainContent.toolbar,
             R.string.open,
             R.string.close
         )
-        drawerLayout.addDrawerListener(toggle)
+        rootElement.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-        navView.setNavigationItemSelectedListener(this)
+        rootElement.navView.setNavigationItemSelectedListener(this)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
         when (item.itemId) {
             R.id.id_my_ads -> {
                 Toast.makeText(this, "Pressed my_ads", Toast.LENGTH_SHORT).show()
@@ -72,8 +70,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(this, "Pressed sign out", Toast.LENGTH_SHORT).show()
             }
         }
-        drawerLayout.closeDrawer(GravityCompat.START)
+        rootElement.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
-
 }
