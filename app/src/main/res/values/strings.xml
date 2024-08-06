@@ -13,5 +13,15 @@
     <string name="ac_sign_out">Sign Out</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <!-- Sign dialog -->
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="sign_in_action">Log in</string>
+    <string name="sign_up_action">Register</string>
+    <string name="forget_password">Forget password?</string>
+    <string name="sing_up_error">Failed to register</string>
+    <string name="sent_verification_error">Failed to send email for confirmation!</string>
+    <string name="sent_verification_done">
+        Your email has been sent a link to confirm your account!</string>
 
 </resources>
