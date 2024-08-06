@@ -12,8 +12,23 @@ class AccountHelper(act: MainActivity) {
             act.mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful) {
                     sentEmailVerification(it.result.user!!)
+                    act.uiUpdate(it.result.user)
+
                 } else {
                     Toast.makeText(act, R.string.sing_up_error, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    fun signInWithEmail(email: String, password: String) {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            act.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    act.uiUpdate(it.result.user)
+
+                } else {
+                    Toast.makeText(act, act.resources.getString(R.string.sing_in_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -22,10 +37,19 @@ class AccountHelper(act: MainActivity) {
     private fun sentEmailVerification(user: FirebaseUser) {
         user.sendEmailVerification().addOnCompleteListener {
             if (it.isSuccessful) {
-                Toast.makeText(act, R.string.sent_verification_done, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    act,
+                    act.resources.getString(R.string.sent_verification_done),
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
-                Toast.makeText(act, R.string.sent_verification_error, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    act,
+                    act.resources.getString(R.string.sent_verification_error),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
+
 }
