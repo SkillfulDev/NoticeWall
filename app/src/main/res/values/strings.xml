@@ -16,10 +16,12 @@
     <string name="not_reg">Sign in/Sign up</string>
     <!-- Sign dialog -->
     <string name="email_hint">Email</string>
+    <string name="email_reset_password_message">To restore your password, please enter your email</string>
+    <string name="email_password_sent">Password reset link was sent</string>
     <string name="password_hint">Password</string>
     <string name="sign_in_action">Log in</string>
     <string name="sign_up_action">Register</string>
-    <string name="forget_password">Forget password?</string>
+    <string name="forget_password">Forgot password?</string>
     <string name="sing_up_error">Failed to register</string>
     <string name="sing_in_error">Failed to log in</string>
     <string name="sing_in_success">You are logged in</string>
