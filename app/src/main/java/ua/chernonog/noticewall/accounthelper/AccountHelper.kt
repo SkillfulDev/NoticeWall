@@ -1,9 +1,12 @@
 package ua.chernonog.noticewall.accounthelper
 
+import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import ua.chernonog.noticewall.MainActivity
@@ -13,40 +16,68 @@ import ua.chernonog.noticewall.dialoghelper.GoogleConst.GOOGLE_SIGN_IN_REQUEST_C
 class AccountHelper(act: MainActivity) {
     private val activity = act
     private lateinit var signInClient: GoogleSignInClient
+
     fun signUpWithEmail(email: String, password: String) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            activity.mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    sentEmailVerification(it.result.user!!)
-                    activity.uiUpdate(it.result.user)
+            activity.firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        sentEmailVerification(it.result.user!!)
+                        activity.uiUpdate(it.result.user)
+                    } else {
+                        Log.d("Exception", "${it.exception}")
+                        if (it.exception is FirebaseAuthUserCollisionException) {
+                            val exception = it.exception as
+                                    FirebaseAuthUserCollisionException
+                            Toast.makeText(
+                                activity,
+                                exception.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                } else {
-                    Toast.makeText(activity, R.string.sing_up_error, Toast.LENGTH_SHORT).show()
+                        } else if (it.exception is FirebaseAuthInvalidCredentialsException) {
+                            val exception = it.exception as
+                                    FirebaseAuthInvalidCredentialsException
+                            Toast.makeText(
+                                activity,
+                                exception.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
-            }
         }
     }
 
     fun signInWithEmail(email: String, password: String) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            activity.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    activity.uiUpdate(it.result.user)
-
-                } else {
-                    Toast.makeText(
-                        activity,
-                        activity.resources.getString(R.string.sing_in_error),
-                        Toast.LENGTH_SHORT
-                    ).show()
+            activity.firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        activity.uiUpdate(it.result.user)
+                        Toast.makeText(
+                            activity,
+                            activity.resources.getString(R.string.sing_in_success),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        if (it.exception is FirebaseAuthInvalidCredentialsException) {
+                            val exception = it.exception as
+                                    FirebaseAuthInvalidCredentialsException
+                            Toast.makeText(
+                                activity,
+                                exception.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
-            }
         }
     }
 
     private fun getSignInClient(): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(activity.getString(R.string.client_id)).build()
+            .requestIdToken(activity.getString(R.string.client_id)).requestEmail().build()
         return GoogleSignIn.getClient(activity, gso)
     }
 
@@ -58,9 +89,12 @@ class AccountHelper(act: MainActivity) {
 
     fun signInFirebaseWithGoogle(token: String) {
         val credential = GoogleAuthProvider.getCredential(token, null)
-        activity.mAuth.signInWithCredential(credential).addOnCompleteListener {
+        activity.firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
                 Toast.makeText(activity, "Ok", Toast.LENGTH_SHORT).show()
+                activity.uiUpdate(it.result.user)
+            } else {
+                Log.d("GoogleSignIn", "${it.exception?.message}")
             }
         }
     }

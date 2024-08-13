@@ -20,22 +20,22 @@ import ua.chernonog.noticewall.dialoghelper.DialogHelper
 import ua.chernonog.noticewall.dialoghelper.GoogleConst.GOOGLE_SIGN_IN_REQUEST_CODE
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    val mAuth = FirebaseAuth.getInstance()
+    val firebaseAuth = FirebaseAuth.getInstance()
     private val dialogHelper = DialogHelper(this)
-    private lateinit var rootElement: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var tvAccount: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        rootElement = ActivityMainBinding.inflate(layoutInflater)
-        val view = rootElement.root
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
         setContentView(view)
         init()
     }
 
     override fun onStart() {
         super.onStart()
-        uiUpdate(mAuth.currentUser)
+        uiUpdate(firebaseAuth.currentUser)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -85,10 +85,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.id_sign_out -> {
                 uiUpdate(null)
-                mAuth.signOut()
+                firebaseAuth.signOut()
             }
         }
-        rootElement.drawerLayout.closeDrawer(GravityCompat.START)
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -103,14 +103,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun init() {
         val toggle = ActionBarDrawerToggle(
             this,
-            rootElement.drawerLayout,
-            rootElement.mainContent.toolbar,
+            binding.drawerLayout,
+            binding.mainContent.toolbar,
             R.string.open,
             R.string.close
         )
-        rootElement.drawerLayout.addDrawerListener(toggle)
+        binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-        rootElement.navView.setNavigationItemSelectedListener(this)
-        tvAccount = rootElement.navView.getHeaderView(0).findViewById(R.id.tvAccountEmail)
+        binding.navView.setNavigationItemSelectedListener(this)
+        tvAccount = binding.navView.getHeaderView(0).findViewById(R.id.tvAccountEmail)
     }
 }
