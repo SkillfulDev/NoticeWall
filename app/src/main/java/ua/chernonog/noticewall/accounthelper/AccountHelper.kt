@@ -1,21 +1,27 @@
 package ua.chernonog.noticewall.accounthelper
 
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import ua.chernonog.noticewall.MainActivity
 import ua.chernonog.noticewall.R
+import ua.chernonog.noticewall.dialoghelper.GoogleConst.GOOGLE_SIGN_IN_REQUEST_CODE
 
 class AccountHelper(act: MainActivity) {
-    private val act = act
+    private val activity = act
+    private lateinit var signInClient: GoogleSignInClient
     fun signUpWithEmail(email: String, password: String) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            act.mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+            activity.mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful) {
                     sentEmailVerification(it.result.user!!)
-                    act.uiUpdate(it.result.user)
+                    activity.uiUpdate(it.result.user)
 
                 } else {
-                    Toast.makeText(act, R.string.sing_up_error, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, R.string.sing_up_error, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -23,13 +29,38 @@ class AccountHelper(act: MainActivity) {
 
     fun signInWithEmail(email: String, password: String) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            act.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+            activity.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful) {
-                    act.uiUpdate(it.result.user)
+                    activity.uiUpdate(it.result.user)
 
                 } else {
-                    Toast.makeText(act, act.resources.getString(R.string.sing_in_error), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        activity,
+                        activity.resources.getString(R.string.sing_in_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+            }
+        }
+    }
+
+    private fun getSignInClient(): GoogleSignInClient {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(activity.getString(R.string.client_id)).build()
+        return GoogleSignIn.getClient(activity, gso)
+    }
+
+    fun signInWithGoogle() {
+        signInClient = getSignInClient()
+        val intend = signInClient.signInIntent
+        activity.startActivityForResult(intend, GOOGLE_SIGN_IN_REQUEST_CODE)
+    }
+
+    fun signInFirebaseWithGoogle(token: String) {
+        val credential = GoogleAuthProvider.getCredential(token, null)
+        activity.mAuth.signInWithCredential(credential).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Toast.makeText(activity, "Ok", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -38,18 +69,17 @@ class AccountHelper(act: MainActivity) {
         user.sendEmailVerification().addOnCompleteListener {
             if (it.isSuccessful) {
                 Toast.makeText(
-                    act,
-                    act.resources.getString(R.string.sent_verification_done),
+                    activity,
+                    activity.resources.getString(R.string.sent_verification_done),
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
                 Toast.makeText(
-                    act,
-                    act.resources.getString(R.string.sent_verification_error),
+                    activity,
+                    activity.resources.getString(R.string.sent_verification_error),
                     Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
-
 }
