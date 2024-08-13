@@ -32,52 +32,47 @@ class DialogHelper(act: MainActivity) {
     }
 
     private fun seOnClickResetPassword(
-        rootDialogElement: SignDialogBinding,
+        binding: SignDialogBinding,
         dialog: AlertDialog
     ) {
-        val email = rootDialogElement.edSignEmail.text.toString()
-        if (rootDialogElement.edSignEmail.text.isNotEmpty()) {
-            activity.mAuth.sendPasswordResetEmail(email).addOnCompleteListener {
+        val email = binding.edSignEmail.text.toString()
+        if (binding.edSignEmail.text.isNotEmpty()) {
+            activity.firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener {
                 if (it.isSuccessful) {
                     dialog.dismiss()
                     Toast.makeText(activity, R.string.email_password_sent, Toast.LENGTH_LONG).show()
                 }
             }
         } else {
-            rootDialogElement.tvDialogMessage.visibility = View.VISIBLE
+            binding.tvDialogMessage.visibility = View.VISIBLE
         }
     }
 
     private fun setOnClickSignUpIn(
         state: Int,
         dialog: AlertDialog,
-        rootDialogElement: SignDialogBinding
+        binding: SignDialogBinding
     ) {
         dialog.dismiss()
-        val email = rootDialogElement.edSignEmail.text.toString()
-        val password = rootDialogElement.edSignPassword.text.toString()
+        val email = binding.edSignEmail.text.toString()
+        val password = binding.edSignPassword.text.toString()
         if (state == DialogConst.SING_UP_STATE) {
             accHelper.signUpWithEmail(email, password)
         } else {
             accHelper.signInWithEmail(email, password)
-            Toast.makeText(
-                activity,
-                activity.resources.getString(R.string.sing_in_success),
-                Toast.LENGTH_LONG
-            ).show()
         }
     }
 
-    private fun setDialogState(state: Int, rootDialogElement: SignDialogBinding) {
+    private fun setDialogState(state: Int, binding: SignDialogBinding) {
         if (state == DialogConst.SING_UP_STATE) {
-            rootDialogElement.tvSignTitle.text = activity.resources.getString(R.string.ac_sign_up)
-            rootDialogElement.btSignUpIn.text =
+            binding.tvSignTitle.text = activity.resources.getString(R.string.ac_sign_up)
+            binding.btSignUpIn.text =
                 activity.resources.getString(R.string.sign_up_action)
         } else {
-            rootDialogElement.tvSignTitle.text = activity.resources.getString(R.string.ac_sign_in)
-            rootDialogElement.btSignUpIn.text =
+            binding.tvSignTitle.text = activity.resources.getString(R.string.ac_sign_in)
+            binding.btSignUpIn.text =
                 activity.resources.getString(R.string.sign_in_action)
-            rootDialogElement.btForgetP.visibility = View.VISIBLE
+            binding.btForgetP.visibility = View.VISIBLE
         }
     }
 }
