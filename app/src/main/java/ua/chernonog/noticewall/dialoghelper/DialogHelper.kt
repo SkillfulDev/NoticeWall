@@ -10,7 +10,7 @@ import ua.chernonog.noticewall.databinding.SignDialogBinding
 
 class DialogHelper(act: MainActivity) {
     private val activity = act
-    private val accHelper = AccountHelper(act)
+    val accHelper = AccountHelper(act)
 
     fun createSignDialog(state: Int) {
         val builder = AlertDialog.Builder(activity)
@@ -22,10 +22,12 @@ class DialogHelper(act: MainActivity) {
         rootDialogElement.btSignUpIn.setOnClickListener {
             setOnClickSignUpIn(state, dialog, rootDialogElement)
         }
-        rootDialogElement.btForgetP.setOnClickListener{
+        rootDialogElement.btForgetP.setOnClickListener {
             seOnClickResetPassword(rootDialogElement, dialog)
         }
-
+        rootDialogElement.btGoogleSignIn.setOnClickListener {
+            accHelper.signInWithGoogle()
+        }
         dialog.show()
     }
 
@@ -69,10 +71,12 @@ class DialogHelper(act: MainActivity) {
     private fun setDialogState(state: Int, rootDialogElement: SignDialogBinding) {
         if (state == DialogConst.SING_UP_STATE) {
             rootDialogElement.tvSignTitle.text = activity.resources.getString(R.string.ac_sign_up)
-            rootDialogElement.btSignUpIn.text = activity.resources.getString(R.string.sign_up_action)
+            rootDialogElement.btSignUpIn.text =
+                activity.resources.getString(R.string.sign_up_action)
         } else {
             rootDialogElement.tvSignTitle.text = activity.resources.getString(R.string.ac_sign_in)
-            rootDialogElement.btSignUpIn.text = activity.resources.getString(R.string.sign_in_action)
+            rootDialogElement.btSignUpIn.text =
+                activity.resources.getString(R.string.sign_in_action)
             rootDialogElement.btForgetP.visibility = View.VISIBLE
         }
     }

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1092915916993",
+    "project_id": "noticewall-d61f5",
+    "storage_bucket": "noticewall-d61f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092915916993:android:c480347f1d1ca8b2682440",
+        "android_client_info": {
+          "package_name": "ua.chernonog.noticewall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1092915916993-31f39d56n73hg0j176q888f17joioa8d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ua.chernonog.noticewall",
+            "certificate_hash": "743688bdcde1bd5c07edd67f49e902f1f990c187"
+          }
+        },
+        {
+          "client_id": "1092915916993-qugbnk38ufuf6hi6m264tpjkrnmusmvi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSl_6VmnRDL3ETT3QndOSTkV65eSOGGVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1092915916993-qugbnk38ufuf6hi6m264tpjkrnmusmvi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
