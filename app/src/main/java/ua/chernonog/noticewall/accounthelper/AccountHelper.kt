@@ -5,6 +5,7 @@ import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
@@ -34,6 +35,7 @@ class AccountHelper(act: MainActivity) {
                                 exception.message,
                                 Toast.LENGTH_SHORT
                             ).show()
+                            linkEmailToGoogle(email, password)
 
                         } else if (it.exception is FirebaseAuthInvalidCredentialsException) {
                             val exception = it.exception as
@@ -75,12 +77,6 @@ class AccountHelper(act: MainActivity) {
         }
     }
 
-    private fun getSignInClient(): GoogleSignInClient {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(activity.getString(R.string.client_id)).requestEmail().build()
-        return GoogleSignIn.getClient(activity, gso)
-    }
-
     fun signInWithGoogle() {
         signInClient = getSignInClient()
         val intend = signInClient.signInIntent
@@ -99,6 +95,12 @@ class AccountHelper(act: MainActivity) {
         }
     }
 
+    private fun getSignInClient(): GoogleSignInClient {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(activity.getString(R.string.client_id)).requestEmail().build()
+        return GoogleSignIn.getClient(activity, gso)
+    }
+
     private fun sentEmailVerification(user: FirebaseUser) {
         user.sendEmailVerification().addOnCompleteListener {
             if (it.isSuccessful) {
@@ -114,6 +116,28 @@ class AccountHelper(act: MainActivity) {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+    }
+
+    private fun linkEmailToGoogle(email: String, password: String) {
+        val credential = EmailAuthProvider.getCredential(email, password)
+        if (activity.firebaseAuth.currentUser == null) {
+            Toast.makeText(
+                activity,
+                activity.resources.getString(R.string.link_error),
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            activity.firebaseAuth.currentUser?.linkWithCredential(credential)
+                ?.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Toast.makeText(
+                            activity,
+                            activity.resources.getString(R.string.link_done),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
     }
 }
