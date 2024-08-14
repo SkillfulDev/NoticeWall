@@ -29,5 +29,8 @@
     <string name="sent_verification_error">Failed to send email for confirmation!</string>
     <string name="sent_verification_done">
         Your email has been sent a link to confirm your account!</string>
+    <!-- Link dialog -->
+    <string name="link_done">Email has been connected to Google account</string>
+    <string name="link_error">To link your email first log in google account</string>
 
 </resources>
