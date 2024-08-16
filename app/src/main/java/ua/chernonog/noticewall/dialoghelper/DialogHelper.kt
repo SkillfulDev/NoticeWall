@@ -3,9 +3,9 @@ package ua.chernonog.noticewall.dialoghelper
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import ua.chernonog.noticewall.MainActivity
 import ua.chernonog.noticewall.R
 import ua.chernonog.noticewall.accounthelper.AccountHelper
+import ua.chernonog.noticewall.activity.MainActivity
 import ua.chernonog.noticewall.databinding.SignDialogBinding
 
 class DialogHelper(act: MainActivity) {
@@ -14,19 +14,20 @@ class DialogHelper(act: MainActivity) {
 
     fun createSignDialog(state: Int) {
         val builder = AlertDialog.Builder(activity)
-        val rootDialogElement = SignDialogBinding.inflate(activity.layoutInflater)
-        val view = rootDialogElement.root
+        val binding = SignDialogBinding.inflate(activity.layoutInflater)
+        val view = binding.root
         builder.setView(view)
-        setDialogState(state, rootDialogElement)
+        setDialogState(state, binding)
         val dialog = builder.create()
-        rootDialogElement.btSignUpIn.setOnClickListener {
-            setOnClickSignUpIn(state, dialog, rootDialogElement)
+        binding.btSignUpIn.setOnClickListener {
+            setOnClickSignUpIn(state, dialog, binding)
         }
-        rootDialogElement.btForgetP.setOnClickListener {
-            seOnClickResetPassword(rootDialogElement, dialog)
+        binding.btForgetP.setOnClickListener {
+            seOnClickResetPassword(binding, dialog)
         }
-        rootDialogElement.btGoogleSignIn.setOnClickListener {
+        binding.btGoogleSignIn.setOnClickListener {
             accHelper.signInWithGoogle()
+            dialog.dismiss()
         }
         dialog.show()
     }

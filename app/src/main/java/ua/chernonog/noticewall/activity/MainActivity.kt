@@ -1,8 +1,9 @@
-package ua.chernonog.noticewall
+package ua.chernonog.noticewall.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
@@ -14,6 +15,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import ua.chernonog.noticewall.R
 import ua.chernonog.noticewall.databinding.ActivityMainBinding
 import ua.chernonog.noticewall.dialoghelper.DialogConst
 import ua.chernonog.noticewall.dialoghelper.DialogHelper
@@ -31,6 +33,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val view = binding.root
         setContentView(view)
         init()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.id_new_ads) {
+            val newIntent = Intent(this, EditAdsActivity::class.java)
+            startActivity(newIntent)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onStart() {
@@ -86,6 +101,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.id_sign_out -> {
                 uiUpdate(null)
                 firebaseAuth.signOut()
+                dialogHelper.accHelper.signOutFromGoogle()
             }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
@@ -101,6 +117,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun init() {
+        setSupportActionBar(binding.mainContent.toolbar)
         val toggle = ActionBarDrawerToggle(
             this,
             binding.drawerLayout,
