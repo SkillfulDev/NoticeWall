@@ -10,8 +10,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import ua.chernonog.noticewall.MainActivity
 import ua.chernonog.noticewall.R
+import ua.chernonog.noticewall.activity.MainActivity
+import ua.chernonog.noticewall.dialoghelper.FirebaseErrorConst
 import ua.chernonog.noticewall.dialoghelper.GoogleConst.GOOGLE_SIGN_IN_REQUEST_CODE
 
 class AccountHelper(act: MainActivity) {
@@ -36,7 +37,6 @@ class AccountHelper(act: MainActivity) {
                                 Toast.LENGTH_SHORT
                             ).show()
                             linkEmailToGoogle(email, password)
-
                         } else if (it.exception is FirebaseAuthInvalidCredentialsException) {
                             val exception = it.exception as
                                     FirebaseAuthInvalidCredentialsException
@@ -66,11 +66,20 @@ class AccountHelper(act: MainActivity) {
                         if (it.exception is FirebaseAuthInvalidCredentialsException) {
                             val exception = it.exception as
                                     FirebaseAuthInvalidCredentialsException
-                            Toast.makeText(
-                                activity,
-                                exception.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Log.d("ExceptionMy", exception.errorCode)
+                            if (exception.errorCode == FirebaseErrorConst.ERROR_INVALID_CREDENTIAL) {
+                                Toast.makeText(
+                                    activity,
+                                    FirebaseErrorConst.ERROR_INVALID_CREDENTIAL,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    activity,
+                                    exception.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
                 }
@@ -87,7 +96,6 @@ class AccountHelper(act: MainActivity) {
         val credential = GoogleAuthProvider.getCredential(token, null)
         activity.firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
-                Toast.makeText(activity, "Ok", Toast.LENGTH_SHORT).show()
                 activity.uiUpdate(it.result.user)
             } else {
                 Log.d("GoogleSignIn", "${it.exception?.message}")
@@ -95,11 +103,16 @@ class AccountHelper(act: MainActivity) {
         }
     }
 
+    fun signOutFromGoogle() {
+        getSignInClient().signOut()
+    }
+
     private fun getSignInClient(): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(activity.getString(R.string.client_id)).requestEmail().build()
         return GoogleSignIn.getClient(activity, gso)
     }
+
 
     private fun sentEmailVerification(user: FirebaseUser) {
         user.sendEmailVerification().addOnCompleteListener {

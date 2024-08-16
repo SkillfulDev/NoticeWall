@@ -32,5 +32,6 @@
     <!-- Link dialog -->
     <string name="link_done">Email has been connected to Google account</string>
     <string name="link_error">To link your email first log in google account</string>
-
+    <!-- Ads menu-->
+    <string name="ad_title">New Ads</string>
 </resources>
